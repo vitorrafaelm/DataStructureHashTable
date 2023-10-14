@@ -74,7 +74,6 @@ public class VehicleOpenAddressHash<T> {
                 System.out.println(i);
             }
         }
-
     }
 
 }

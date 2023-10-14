@@ -1,37 +1,28 @@
 package protocol.facades.OpenAddress;
 
 import api.exposed.openAddressExposed.OpenAddressExposed;
-import api.storage.models.Vehicles;
 import api.storage.operations.OpenAddressOperations.OpenAddressOperationsVehicles.OpenAddressOperationsVehicles;
-import protocol.interfaces.ProtocolFacade;
 
-public class OpenAddressFacadeVehicles implements ProtocolFacade<Vehicles> {
+public class OpenAddressFacadeVehicles {
 
     OpenAddressOperationsVehicles vehicleOperations = new OpenAddressExposed().getOperationsVehicles();
 
-    @Override
     public void list() {
         vehicleOperations.list();
     }
 
-    @Override
-    public void delete(Vehicles node) {
-        vehicleOperations.delete(node);
+    public void delete(String valueToDelete) {
+        vehicleOperations.delete(valueToDelete);
     }
 
-    @Override
-    public Vehicles update(Vehicles node) {
-        vehicleOperations.update(node);
-        return node;
+    public void update(String licensePlate, String reindeer, String modelName, String createdVehicleDate, String Drivername, String DriverCPF) {
+        vehicleOperations.update(licensePlate, reindeer, modelName, createdVehicleDate, Drivername, DriverCPF);
+    }
+    public void insert(String licensePlate, String reindeer, String modelName, String createdVehicleDate, String Drivername, String DriverCPF) {
+        vehicleOperations.insert(licensePlate, reindeer, modelName, createdVehicleDate, Drivername, DriverCPF);
     }
 
-    @Override
-    public void insert(Vehicles node) {
-        vehicleOperations.insert(node);
-    }
-
-    @Override
-    public void findBy(int value) {
+    public void findBy(String value) {
         vehicleOperations.findBy(value);
     }
 }

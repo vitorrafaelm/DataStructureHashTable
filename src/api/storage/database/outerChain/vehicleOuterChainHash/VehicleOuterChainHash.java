@@ -1,14 +1,15 @@
 package api.storage.database.outerChain.vehicleOuterChainHash;
 
+import api.storage.database.outerChain.vehicleOuterChainHash.autoadjust.LinkedList;
 import api.storage.models.Vehicles;
 
 public class VehicleOuterChainHash<T> {
     Integer outerChainHashSize;
-    VehicleOuterChainNode[] table;
+    LinkedList[] table;
 
     public VehicleOuterChainHash(int size) {
         this.outerChainHashSize = size;
-        this.table = new VehicleOuterChainNode[size];
+        this.table = new LinkedList[size];
     }
 
     public int hash(int keyValue) {
@@ -17,85 +18,57 @@ public class VehicleOuterChainHash<T> {
 
     public void insert(int keyValueVehiclePlate, Vehicles value) {
         int hashPosition = this.hash(keyValueVehiclePlate);
-        VehicleOuterChainNode node = this.table[hashPosition];
 
-        while(node != null) {
-            if(node.key == keyValueVehiclePlate) {
-                break;
-            }
-            node = node.next;
+        if (this.table[hashPosition] == null) {
+            this.table[hashPosition] = new LinkedList();
         }
 
-        if(node == null) {
-            node = new VehicleOuterChainNode(keyValueVehiclePlate);
-            node.value = value;
-            node.next = this.table[hashPosition];
-            this.table[hashPosition] = node;
-        }
+        LinkedList node = this.table[hashPosition];
+        node.inserir(keyValueVehiclePlate, value);
     }
 
     public void updateOuterChainNode(int keyToSearch, Vehicles vehicle) {
-        VehicleOuterChainNode outerChainNode = this.search(keyToSearch);
+        int linkedListArrayPosition = this.hash(keyToSearch);
+        LinkedList node = this.table[linkedListArrayPosition];
 
-        if (outerChainNode != null) {
-            outerChainNode.value = vehicle;
-        }
+        node.update(keyToSearch, vehicle, linkedListArrayPosition);
     }
 
     public void deleteOuterChainNode(int keyToSearch) {
         int c = this.hash(keyToSearch);
-        VehicleOuterChainNode no = this.table[c];
+        LinkedList node = this.table[c];
 
-        while (no != null) {
-            if (no.key == keyToSearch) {
-                if(no.next != null) {
-                    no.key = no.next.key;
-                    no.value = no.next.value;
-                    no.next = no.next.next;
-                } else {
-                    no.key = null;
-                    no.value = null;
-                    break;
-                }
-            }
-
-            no = no.next;
+        if (node != null) {
+            node.delete(keyToSearch);
         }
     }
 
-    public VehicleOuterChainNode search(int k) {
-        int c = this.hash(k);
-        VehicleOuterChainNode no = this.table[c];
+    public VehicleOuterChainNode search(int keyToSearch) {
+        int arrayPositionToSearch = this.hash(keyToSearch);
+        LinkedList node = this.table[arrayPositionToSearch];
 
-        while(no != null) {
-            if(no.key == k) {
-                System.out.println(" --> { key: " + no.key + " vehicle " + no.value.toString() + " }");
-                return no;
-            }
-
-
-            no = no.next;
+        if (node == null) {
+            System.out.println("Value not found");
+        } else {
+            node.searchMoveForward(keyToSearch, arrayPositionToSearch);
         }
+
         return null;
     }
 
 
     public void print() {
-
-        VehicleOuterChainNode no;
-
+        LinkedList node;
         for (int i = 0; i < this.outerChainHashSize; i++) {
 
-            no = this.table[i];
-            System.out.print(i);
-
-            while(no != null && no.key != null && no.value != null) {
-                System.out.print(" --> { key: " + no.key + " vehicle " + no.value.toString() + " }");
-                no = no.next;
+            node = this.table[i];
+            if (node == null) {
+                System.out.print("Position " + i);
+            } else {
+                System.out.print("Position " + i);
+                node.print();
             }
-
             System.out.println();
         }
-
     }
 }

@@ -2,6 +2,6 @@ package api.storage.operations.interfaces;
 
 public interface OperationsInterfaceDrivers<T> {
 
-    void insert(T node);
+    void insert(String document, String name);
     void list();
 }
